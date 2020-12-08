@@ -1,82 +1,71 @@
-#python3.8
-import os
-import sys
-import requests
-import json
-import random
+import cv2
+import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image,ImageDraw
-from io import BytesIO
-try:
-    with open('logincred.json','r') as f:
-        credentials = json.loads(f.read())
-        COMPUTER_VISION_SUBSCRIPTION_KEY = credentials['COMPUTER_VISION_SUBSCRIPTION_KEY'] 
-        COMPUTER_VISION_ENDPOINT = credentials['COMPUTER_VISION_ENDPOINT']
-        print(COMPUTER_VISION_ENDPOINT,';',COMPUTER_VISION_SUBSCRIPTION_KEY)
-except FileNotFoundError:
-    print("logincred.json doesnt exist...")
-    print("create a file with azure object detection credentials")
-    print("format: {COMPUTER_VISION_SUBSCRIPTION_KEY\":\"value\",\"COMPUTER_VISION_ENDPOINT\":\"value\"}")
-    exit()
-# Add your Computer Vision subscription key and endpoint to your environment variables.
-
-subscription_key = COMPUTER_VISION_SUBSCRIPTION_KEY
-endpoint = COMPUTER_VISION_ENDPOINT
-
-analyze_url = endpoint + "vision/v3.1/analyze"
-
-# Set image_path to the local path of an image that you want to analyze.
-# Sample images are here, if needed:
-# https://github.com/Azure-Samples/cognitive-services-sample-data-files/tree/master/ComputerVision/Images
-if len(sys.argv) > 1:
-    image_path = sys.argv[1]
-else:
-    raise Exception("Wrong number of arguments.")
-
-# Read the image into a byte array
-image_data = open(image_path, "rb").read()
-headers = {'Ocp-Apim-Subscription-Key': subscription_key,
-           'Content-Type': 'application/octet-stream'}
-params = {'visualFeatures': 'Categories,Description,Color,Objects'}
-response = requests.post(
-    analyze_url, headers=headers, params=params, data=image_data)
-response.raise_for_status()
-
-# The 'analysis' object contains various fields that describe the image. The most
-# relevant caption for the image is obtained from the 'description' property.
-analysis = response.json()
-# jsoutput = json.dumps(analysis)
-# with open('output.json','w') as jsonfile:
-#     jsonfile.write(jsoutput)
-image_caption = analysis["description"]["captions"][0]["text"].capitalize()
+from random import randint
+import sys
 
 
 def color_generator():
     color = []
     for i in range(3):
-        color.append(random.randint(0,255))
+        color.append(randint(0,255)-randint(0,255)%10)
     return tuple(color)
 
-loaded_json = analysis.copy()
-objects = loaded_json['objects']
-person_rectangles = []
-for i in objects:
-    if i['object'] == 'person':
-        person_rectangles.append(i['rectangle'])
-im = Image.open(image_path) #opening sample picture
-draw_im = ImageDraw.Draw(im)
-all_coords = []
-for i in person_rectangles:
-    print(i)
-    x0 = i['x']
-    y0 = i['y']
-    x1 = x0 + i['w']
-    y1 = y0 + i['h']
-    coords = [x0,y0,x1,y1]
-    all_coords.append(coords)
-    draw_im.rectangle(coords,outline=color_generator(),width=2)
-output = {"people":all_coords}
-writejson = json.dumps(output)
-with open(image_path.split('.')[0] + '.json','w') as f:
-    f.write(writejson)
-im.show()
+def get_people_coordinates(image_path):
+    #'coco.names, yolo3.weights, yolov3.cfg' must exist in cwd
+    classes = None
+
+    image = plt.imread(image_path)
+    height, width, ch = image.shape
+    with open('coco.names', 'r') as f:
+        classes = [line.strip() for line in f.readlines()]
+
+    # read pre-trained model and config file
+    net = cv2.dnn.readNet('yolov3.weights', 'yolov3.cfg')
+    net.setInput(cv2.dnn.blobFromImage(image, 1/255.0, (416,416), (0,0,0), True, crop=False))
+    layer_names = net.getLayerNames()
+    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    outs = net.forward(output_layers)
+
+
+    boxes = []
+    class_ids = []
+    confidences = []
+    boxes = []
+    #puts results in different lists (linked by order)
+    for out in outs:
+        for detection in out:
+            scores = detection[5:]
+            class_id = np.argmax(scores)
+            confidence = scores[class_id]
+            if confidence > 0.1:
+                center_x = int(detection[0] * width)
+                center_y = int(detection[1] * height)
+                w = int(detection[2] * width)
+                h = int(detection[3] * height)
+                x = center_x - w / 2
+                y = center_y - h / 2
+                class_ids.append(class_id)
+                confidences.append(float(confidence))
+                boxes.append([x, y, w, h])
+
+    #finds the best-fitting box
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+
+
+    # im = Image.open(image_path) #opening input picture for drawing
+    # draw_im = ImageDraw.Draw(im)
+
+    correct_boxes = []
+    for i in indices:
+        i = i[0]
+        box = boxes[i]
+        if class_ids[i]==0:
+            x,y,w,h = box
+            correct_boxes.append([x,y,x+w,y+h])
+            # draw_im.rectangle([x,y,x+w,y+h],outline=color_generator(),width=3)
+    
+    # im.show()
+    
+    return correct_boxes
