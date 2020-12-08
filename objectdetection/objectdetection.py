@@ -1,3 +1,4 @@
+#python3.8.5
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,7 +14,15 @@ def color_generator():
     return tuple(color)
 
 def get_people_coordinates(image_path):
-    #'coco.names, yolo3.weights, yolov3.cfg' must exist in cwd
+    #'coco.names', 'yolo3.weights', 'yolov3.cfg' must exist in cwd
+    
+    try:
+        f = open("coco.names")
+        f = open("yolov3.weights")
+        f = open("yolov3.cfg")
+    except IOError:
+        print('File from CWD missing')
+        exit()
     classes = None
 
     image = plt.imread(image_path)
