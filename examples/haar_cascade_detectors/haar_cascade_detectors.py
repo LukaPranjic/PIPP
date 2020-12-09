@@ -43,7 +43,7 @@ if __name__ == "__main__":
     pipeline = HaarCascadeDetectors(args.models)
     if args.image_path is None:
         camera = Camera(args.camera_id)
-        player = VideoPlayer((640, 480), pipeline, camera)
+        player = VideoPlayer((1280, 960), pipeline, camera)
         player.run()
     else:
         image = load_image(args.image_path)
