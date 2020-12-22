@@ -211,5 +211,15 @@ for i in range(17):
         cv2.line(resultImage, (B[0], A[0]), (B[1], A[1]), colors[i], 3, cv2.LINE_AA)
 
 
-cv2.imshow("Estimated Poses" , resultImage)
+# show the image
+def showImage(title, img):
+    cv2.imshow(title, img)
+
+# save the image
+def saveImage(name, img):
+    cv2.imwrite(name , img)
+
+showImage("Estimated Poses" , resultImage)
+saveImage("estimatedPoses.jpg", resultImage)
+
 cv2.waitKey(0)
