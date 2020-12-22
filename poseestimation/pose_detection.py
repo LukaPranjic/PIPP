@@ -216,10 +216,10 @@ def showImage(title, img):
     cv2.imshow(title, img)
 
 # save the image
-def saveImage(name, img):
-    cv2.imwrite(name , img)
+def saveImage(name, img, path):
+    cv2.imwrite(os.path.join(path, name), img)
 
 showImage("Estimated Poses" , resultImage)
-saveImage("estimatedPoses.jpg", resultImage)
+saveImage("estimatedPoses.jpg", resultImage, 'D:/OpenCV/Scripts/Images')
 
 cv2.waitKey(0)
