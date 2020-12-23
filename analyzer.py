@@ -1,6 +1,7 @@
 from paz.applications import HaarCascadeFrontalFace, MiniXceptionFER
 import paz.processors as pr
 
+
 class EmotionDetector(pr.Processor):
     def __init__(self):
         super(EmotionDetector, self).__init__()
@@ -14,5 +15,8 @@ class EmotionDetector(pr.Processor):
         cropped_images = self.crop(image, boxes2D)
         for cropped_image, box2D in zip(cropped_images, boxes2D):
             box2D.class_name = self.classify(cropped_image)['class_name']
-        return self.draw(image, boxes2D)
+        # return self.draw(image, boxes2D)
+        return boxes2D
 
+    def install(self, image, boxes2D):
+        return self.draw(image, boxes2D)

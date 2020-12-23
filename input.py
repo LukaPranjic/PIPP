@@ -1,11 +1,17 @@
-from paz.backend.image import load_image#, show_image, write_image
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+from paz.backend.image import load_image
 from analyzer import EmotionDetector
 
-def emotion(filepath):
-    detect = EmotionDetector()
-    # you can now apply it to an image (numpy array)
-    #images = load_image('neo.png')
+detect = EmotionDetector()
+
+
+"""# Returns Boxes of 2D rectangles. Also included is the estimated emotion"""
+def emotionFinder(filepath):
     return detect(load_image(filepath))
-    #predictions = detect(images)
-    # show_image(predictions)
-    #write_image("faceClassification.png", predictions)
+
+"""Incorporates the given image with given Boxes of 2D rectangles"""
+def incorporate(image, boxes2D):
+    # detect = EmotionDetector()
+    return detect.install(image, boxes2D)

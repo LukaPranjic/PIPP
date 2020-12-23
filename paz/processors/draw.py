@@ -20,6 +20,7 @@ class DrawBoxes2D(Processor):
             score of the bounding box.
         scale: Float. Scale of drawn text.
     """
+
     def __init__(self, class_names=None, colors=None,
                  weighted=False, scale=0.7):
         self.class_names = class_names
@@ -42,7 +43,8 @@ class DrawBoxes2D(Processor):
             color = self.class_to_color[class_name]
             if self.weighted:
                 color = [int(channel * box2D.score) for channel in color]
-            text = '{:0.2f}, {}'.format(box2D.score, class_name)
+            # text = '{:0.2f}, {}'.format(box2D.score, class_name)
+            text = '{}'.format(class_name)
             put_text(image, text, (x_min, y_min - 10), self.scale, color, 1)
             draw_rectangle(image, (x_min, y_min), (x_max, y_max), color, 2)
         return image
@@ -55,6 +57,7 @@ class DrawKeypoints2D(Processor):
         num_keypoints: Int. Used initialize colors for each keypoint
         radius: Float. Approximate radius of the circle in pixel coordinates.
     """
+
     def __init__(self, num_keypoints, radius=3, normalized=False):
         super(DrawKeypoints2D, self).__init__()
         self.colors = lincolor(num_keypoints, normalized=normalized)
@@ -118,6 +121,7 @@ class DrawRandomPolygon(Processor):
                 from ``[0, max_radius_scale]``. This radius is later
                 multiplied by the image dimensions.
     """
+
     def __init__(self, max_radius_scale=.5):
         super(DrawRandomPolygon, self).__init__()
         self.max_radius_scale = max_radius_scale
