@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QDialog
 from PyQt5.QtGui import QPixmap
 import sys
+import gui
 
 class Ui_MainWindow(QDialog):
     def setupUi(self, MainWindow):
@@ -80,7 +81,7 @@ class Ui_MainWindow(QDialog):
             
     def save_action(self):
         print('save_action')
-            
+        
 class File_Dialog(QWidget):
 
     def __init__(self):
