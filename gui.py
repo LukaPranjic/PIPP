@@ -9,13 +9,15 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QDialog
+from PyQt5.QtGui import QPixmap
 import sys
 
-class Ui_MainWindow(object):
+class Ui_MainWindow(QDialog):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 604)
+        # MainWindow.resize(800, 604)
+        MainWindow.setFixedSize(800,604)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
@@ -48,7 +50,19 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Pose detection"))
         self.pushButton_3.setText(_translate("MainWindow", "Emotion detection"))
         self.pushButton_4.setText(_translate("MainWindow", "Save"))
+    
+    def showImage(self,image_path):
+        scene = QtWidgets.QGraphicsScene(self)
+        pixmap = QPixmap(image_path)
+        pixmap_scaled_to_height = pixmap.scaled(791, 531, QtCore.Qt.KeepAspectRatio)
+        item = QtWidgets.QGraphicsPixmapItem(pixmap_scaled_to_height)
         
+        scene.addItem(item)
+        # self.graphicsView.fitInView()
+        self.graphicsView.setScene(scene)
+
+
+            
 class File_Dialog(QWidget):
 
     def __init__(self):
@@ -58,10 +72,12 @@ class File_Dialog(QWidget):
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(self,"Detection: Open image", "","All Files (*);;Python Files (*.py)", options=options)
+        print(fileName)
         if fileName:
             return(fileName)
-    
+        else: #no picture selected
+            exit(0)
     def openFileNamesDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
