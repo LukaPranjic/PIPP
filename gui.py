@@ -26,15 +26,23 @@ class Ui_MainWindow(QDialog):
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(10, 550, 131, 27))
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.clicked.connect(self.object_detection_action)
+        
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(150, 550, 121, 27))
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.clicked.connect(self.pose_detection_action)
+        
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_3.setGeometry(QtCore.QRect(280, 550, 141, 27))
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.clicked.connect(self.emotion_detection_action)
+        
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_4.setGeometry(QtCore.QRect(700, 550, 91, 27))
         self.pushButton_4.setObjectName("pushButton_4")
+        self.pushButton_4.clicked.connect(self.save_action)
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -61,7 +69,17 @@ class Ui_MainWindow(QDialog):
         # self.graphicsView.fitInView()
         self.graphicsView.setScene(scene)
 
+    def object_detection_action(self):
+        print('object_detection_action')
 
+    def pose_detection_action(self):
+        print('pose_detection_action')
+        
+    def emotion_detection_action(self):
+        print('emotion_detection_action')
+            
+    def save_action(self):
+        print('save_action')
             
 class File_Dialog(QWidget):
 

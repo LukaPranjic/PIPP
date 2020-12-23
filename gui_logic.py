@@ -17,3 +17,4 @@ ui.showImage(working_image)
 
 MainWindow.show()
 sys.exit(app.exec_())
+
