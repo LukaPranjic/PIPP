@@ -6,6 +6,9 @@ from PIL import Image,ImageDraw
 from random import randint
 import sys
 
+COCO_NAMES = './objectdetection/coco.names'
+YOLOV3_WEIGHTS = './objectdetection/yolov3.weights'
+YOLOV3_CFG = './objectdetection/yolov3.cfg'
 
 def color_generator():
     color = []
@@ -17,9 +20,9 @@ def get_people_coordinates(image_path):
     #'coco.names', 'yolo3.weights', 'yolov3.cfg' must exist in cwd
     
     try:
-        f = open("coco.names")
-        f = open("yolov3.weights")
-        f = open("yolov3.cfg")
+        f = open(COCO_NAMES)
+        f = open(YOLOV3_WEIGHTS)
+        f = open(YOLOV3_CFG)
     except IOError:
         print('File from CWD missing')
         exit()
@@ -27,11 +30,11 @@ def get_people_coordinates(image_path):
 
     image = plt.imread(image_path)
     height, width, ch = image.shape
-    with open('coco.names', 'r') as f:
+    with open(COCO_NAMES, 'r') as f:
         classes = [line.strip() for line in f.readlines()]
 
     # read pre-trained model and config file
-    net = cv2.dnn.readNet('yolov3.weights', 'yolov3.cfg')
+    net = cv2.dnn.readNet(YOLOV3_WEIGHTS, YOLOV3_CFG)
     net.setInput(cv2.dnn.blobFromImage(image, 1/255.0, (416,416), (0,0,0), True, crop=False))
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
