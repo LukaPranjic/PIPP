@@ -7,11 +7,14 @@ from analyzer import EmotionDetector
 detect = EmotionDetector()
 
 
-"""# Returns Boxes of 2D rectangles. Also included is the estimated emotion"""
-def emotionFinder(filepath):
-    return detect(load_image(filepath))
+# """# Function expects a filepath. Returns Boxes of 2D rectangles. Also included is the estimated emotion"""
+# def emotionFinder(filepath):
+#     return detect(load_image(filepath))
 
-"""Incorporates the given image with given Boxes of 2D rectangles"""
+"""Function expects a numpy array image. Returns Boxes of 2D rectangles. Also included is the estimated emotion"""
+def emotionFinder(image):
+    return detect(image)
+
+"""Incorporates the given image (expected as numpy array) with given Boxes of 2D rectangles"""
 def incorporate(image, boxes2D):
-    # detect = EmotionDetector()
     return detect.install(image, boxes2D)
