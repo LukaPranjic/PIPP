@@ -73,7 +73,10 @@ if o_d or p_d or e_d:
             cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
     if e_d:
         rectangles = emotion_detection.get_emotions(input_location)
-        # `print(rectangles)
+        for i in rectangles:
+            cv2.rectangle(temp,i[0],i[1],(255,0,0),2)
+            # TODO:add emotion text
+        print(rectangles)
 if not s_l:
     save_location = input_path_head + '/a.jpg'
 cv2.imwrite(save_location,temp)
