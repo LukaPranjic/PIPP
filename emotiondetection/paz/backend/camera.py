@@ -106,7 +106,7 @@ class VideoPlayer(object):
 
         frame = self.camera.read()
         if frame is None:
-            print('Frame: None')
+            # print('Frame: None')
             return None
         # all pipelines start with an RGB image
         frame = convert_color_space(frame, BGR2RGB)

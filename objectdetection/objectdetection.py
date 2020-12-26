@@ -35,7 +35,7 @@ def get_people_coordinates(image_path):
 
     # read pre-trained model and config file
     net = cv2.dnn.readNet(YOLOV3_WEIGHTS, YOLOV3_CFG)
-    net.setInput(cv2.dnn.blobFromImage(image, 1/255.0, (416,416), (0,0,0), True, crop=False))
+    net.setInput(cv2.dnn.blobFromImage(image, 0.00392, (416,416), (0,0,0), True, crop=False))
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
     outs = net.forward(output_layers)
@@ -63,7 +63,7 @@ def get_people_coordinates(image_path):
                 boxes.append([x, y, w, h])
 
     #finds the best-fitting box
-    indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.1, 0.1)
 
 
     # im = Image.open(image_path) #opening input picture for drawing
@@ -75,7 +75,7 @@ def get_people_coordinates(image_path):
         box = boxes[i]
         if class_ids[i]==0:
             x,y,w,h = box
-            correct_boxes.append([x,y,x+w,y+h])
+            correct_boxes.append([int(x),int(y),int(x+w),int(y+h)])
             # draw_im.rectangle([x,y,x+w,y+h],outline=color_generator(),width=3)
     
     # im.show()

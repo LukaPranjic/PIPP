@@ -1,20 +1,24 @@
-from cv2 import cv2 as cv2
+import cv2
 import numpy as np
 import argparse
 import os
 
 
 def poseDetection(path):
-    parser = argparse.ArgumentParser(description='Run keypoint detection')
-    parser.add_argument("--device", default="cpu", help="Device to inference on")
-    parser.add_argument("--image_file", default=path, help="Input image")
+    # parser = argparse.ArgumentParser(description='Run keypoint detection')
+    # parser.add_argument("--device", default="cpu", help="Device to inference on")
+    # parser.add_argument("--image_file", default=path, help="Input image")
 
-    args = parser.parse_args()
+    # args = parser.parse_args()
+    # print(path)
+    inputImage = cv2.imread(path)
 
-    inputImage = cv2.imread(args.image_file)
-
-    protoFile = r".\posedetection\pose_d.prototxt"
-    weightsFile = r".\posedetection\pose_i.caffemodel"
+    # protoFile = r"./pose_d.prototxt"
+    # weightsFile = r"./pose_i.caffemodel"
+    # print(type(inputImage))
+    #TODO: WINDOWS
+    protoFile = r"./posedetection/pose_d.prototxt"
+    weightsFile = r"./posedetection/pose_i.caffemodel"
     nPoints = 18
     keypointsMapping = ['Nose', 'Neck', 'R-Sho', 'R-Elb', 'R-Wr', 'L-Sho', 'L-Elb', 'L-Wr', 'R-Hip', 'R-Knee', 'R-Ank', 'L-Hip', 'L-Knee', 'L-Ank', 'R-Eye', 'L-Eye', 'R-Ear', 'L-Ear']
 
@@ -162,13 +166,13 @@ def poseDetection(path):
 
     #t = time.time()
     net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
-    if args.device == "cpu":
-        net.setPreferableBackend(cv2.dnn.DNN_TARGET_CPU)
-        #print("Using CPU device")
-    elif args.device == "gpu":
-        net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-        net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
-        #print("Using GPU device")
+    # if args.device == "cpu":
+    #     net.setPreferableBackend(cv2.dnn.DNN_TARGET_CPU)
+    #     #print("Using CPU device")
+    # elif args.device == "gpu":
+    #     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+    #     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+    #     #print("Using GPU device")
 
     #Fix the input Height and get the width according to the Aspect Ratio
     inHeight = 368
@@ -211,15 +215,17 @@ def poseDetection(path):
             B = np.int32(keypoints_list[index.astype(int), 0])
             A = np.int32(keypoints_list[index.astype(int), 1])
             cv2.line(resultImage, (B[0], A[0]), (B[1], A[1]), colors[i], 3, cv2.LINE_AA)
-
+    # print('Im here')
+    # cv2.imwrite(save_path,resultImage)
+    return resultImage
     # show the image
     def showImage(title, img):
         cv2.imshow(title, img)
 
-    showImage("Estimated Poses" , resultImage)
+    # showImage("Estimated Poses" , resultImage)
 
-    cv2.waitKey(0)
-    return resultImage
+    # cv2.waitKey(0)
+    # return resultImage
 
 # save the image
 def saveImage(name, img, path):
@@ -228,6 +234,6 @@ def saveImage(name, img, path):
 
 
 #resultImage = poseDetection(r"C:\Users\dolja\Downloads\pose.jpg")
-#resultImage = poseDetection("people.jpg")
+# resultImage = poseDetection("people.jpg")
 
 #saveImage("estimatedPoses.jpg", resultImage, 'D:/OpenCV/Scripts/Images')

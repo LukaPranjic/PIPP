@@ -219,7 +219,7 @@ def random_shape_crop(image, shape):
     """
     H, W = image.shape[:2]
     if (shape[0] >= H) or (shape[1] >= W):
-        print('WARNING: Image is smaller than crop shape', H, W, shape)
+        # print('WARNING: Image is smaller than crop shape', H, W, shape)
         return None
     x_min = np.random.randint(0, (W - 1) - shape[1])
     y_min = np.random.randint(0, (H - 1) - shape[0])

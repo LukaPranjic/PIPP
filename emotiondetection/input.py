@@ -1,8 +1,8 @@
 import os
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-from paz.backend.image import load_image
-from analyzer import EmotionDetector
+
+from emotiondetection.paz.backend.image import load_image
+from emotiondetection.analyzer import EmotionDetector
 
 detect = EmotionDetector()
 

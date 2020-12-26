@@ -66,7 +66,7 @@ class OpenImages(Loader):
 
         self._class_names = class_names
         self._num_classes = len(self.machine_to_arg)
-        print("Found {} {} classes".format(self.num_classes, self.split))
+        # print("Found {} {} classes".format(self.num_classes, self.split))
 
     def _get_num_lines(self, file_path):
         file_data = open(file_path, "r+")
@@ -124,5 +124,5 @@ class OpenImages(Loader):
 
         msg = '{} split: loaded {} images with {} bounding box annotations'
         num_of_boxes = sum(self.class_distribution.values())
-        print(msg.format(self.split, len(data), num_of_boxes))
+        # print(msg.format(self.split, len(data), num_of_boxes))
         return formatted_data
