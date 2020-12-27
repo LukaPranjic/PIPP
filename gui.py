@@ -223,7 +223,7 @@ class File_Dialog(QWidget):
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self,"Detection: Open image", "","All Files (*);;Python Files (*.py)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(self,"Det3ction: Open image", "","All Files (*);;Python Files (*.py)", options=options)
         # print(fileName)
         if fileName:
             return(fileName)
@@ -238,7 +238,7 @@ class File_Dialog(QWidget):
     def saveFileDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(self,"QFileDialog.getSaveFileName()","","All Files (*);;Text Files (*.txt)", options=options)
+        fileName, _ = QFileDialog.getSaveFileName(self,"Det3ction: Save image","","All Files (*);;Text Files (*.txt)", options=options)
         if fileName:
             return(fileName)
 def draw_object_detection(input_location):
