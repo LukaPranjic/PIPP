@@ -6,7 +6,7 @@ def get_emotions(path):
 	return_list = []
 	for j in boxes2D:
 		i = j.coordinates
-		return_list.append([(i[0],i[1]),(i[2],i[3]),str(j.score) + ' ' + str(j.class_name)]) #xy left lower corner, xy right upper corner, label 
+		return_list.append([(i[0],i[1]),(i[2],i[3]),str(j.class_name)]) #xy left lower corner, xy right upper corner, label 
 	return(return_list)
 # boxes2D = get_emotions('neo.jpg')
 # print(boxes2D)
