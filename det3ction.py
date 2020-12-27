@@ -4,6 +4,10 @@ import cv2
 import os.path
 import sys
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import warnings
+warnings.filterwarnings("ignore", "Distutils was imported before Setuptools. This usage is discouraged and may exhibit undesirable behaviors or errors. Please use Setuptools' objects directly or at least import Setuptools first.",  UserWarning, "setuptools.distutils_patch")
+
 input_location = ''
 save_location = ''
 
@@ -117,7 +121,6 @@ if o_d or p_d or e_d:
         
         rectangles = emotion_detection.get_emotions(input_location)
         for i in rectangles:
-            print(i)
             cv2.rectangle(temp,i[0],i[1],(255,0,0),2)
             text_position = (i[0][0],i[0][1]-10) #left upper corner
             cv2.putText(temp,i[2],text_position, cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
