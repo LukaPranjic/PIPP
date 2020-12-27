@@ -18,7 +18,7 @@ e_d = False
 if len(sys.argv) == 1:
     print("Wrong number of arguments.")
     exit(0)
-
+#TODO:zamijeniti ovaj shit kod s argpase libraryem
 itr = iter(range(1,len(sys.argv)))
 for i in itr:
     # print(i)
@@ -74,9 +74,10 @@ if o_d or p_d or e_d:
     if e_d:
         rectangles = emotion_detection.get_emotions(input_location)
         for i in rectangles:
+            print(i)
             cv2.rectangle(temp,i[0],i[1],(255,0,0),2)
-            # TODO:add emotion text
-        print(rectangles)
+            text_position = (i[0][0],i[0][1]-10) #left upper corner
+            cv2.putText(temp,i[2],text_position, cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
 if not s_l:
     save_location = input_path_head + '/a.jpg'
 cv2.imwrite(save_location,temp)
