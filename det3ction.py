@@ -1,6 +1,5 @@
 from objectdetection import objectdetection 
 from posedetection import *
-import emotion_detection
 import cv2
 import os.path
 import sys
@@ -8,7 +7,7 @@ import sys
 input_location = ''
 save_location = ''
 
-# help_file_location ='help.txt' #TODO: kad se napise help file
+help_file_location ='help.txt'
 # flags
 
 sh_f = False #show help flag
@@ -30,6 +29,7 @@ for i in itr:
     # print(current_arg)
     if current_arg == '--help':
         sh_f = True
+        break
     if current_arg[0] == '-':
         if 'h' in current_arg:
             sh_f = True
@@ -58,11 +58,12 @@ for i in itr:
         print("Wrong number of arguments.")
         exit(0)
 
-# if sh_f:
-#     with open(help_file_location,'r') as f:
-#         for line if f:
-#             print(line)
-#     exit(1)
+if sh_f:
+    with open(help_file_location,'r') as f:
+        for line in f:
+            print(line,end='')
+    print()
+    exit(1)
 input_location = os.path.abspath(input_location)
 save_location = os.path.abspath(save_location)
 
@@ -85,6 +86,8 @@ if o_d or p_d or e_d:
             print((i[0],i[1]),(i[2],i[3]),(255,0,0),2)
             cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
     if e_d:
+        import emotion_detection
+        
         rectangles = emotion_detection.get_emotions(input_location)
         for i in rectangles:
             print(i)
