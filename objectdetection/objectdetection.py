@@ -28,7 +28,7 @@ def get_people_coordinates(image_path):
         exit()
     classes = None
 
-    image = plt.imread(image_path)
+    image = cv2.imread(image_path)
     height, width, ch = image.shape
     with open(COCO_NAMES, 'r') as f:
         classes = [line.strip() for line in f.readlines()]
@@ -63,7 +63,7 @@ def get_people_coordinates(image_path):
                 boxes.append([x, y, w, h])
 
     #finds the best-fitting box
-    indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.1, 0.1)
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, 0, 0)
 
 
     # im = Image.open(image_path) #opening input picture for drawing
