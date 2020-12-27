@@ -7,7 +7,11 @@ import sys
 
 input_location = ''
 save_location = ''
-#detection flags
+
+# help_file_location ='help.txt' #TODO: kad se napise help file
+# flags
+
+sh_f = False #show help flag
 i_l = False #locations
 s_l = False
 
@@ -24,7 +28,11 @@ for i in itr:
     # print(i)
     current_arg = sys.argv[i]
     # print(current_arg)
+    if current_arg == '--help':
+        sh_f = True
     if current_arg[0] == '-':
+        if 'h' in current_arg:
+            sh_f = True
         if 'o' in current_arg:
             s_l = True
             if i < len(sys.argv):
@@ -50,6 +58,11 @@ for i in itr:
         print("Wrong number of arguments.")
         exit(0)
 
+# if sh_f:
+#     with open(help_file_location,'r') as f:
+#         for line if f:
+#             print(line)
+#     exit(1)
 input_location = os.path.abspath(input_location)
 save_location = os.path.abspath(save_location)
 
