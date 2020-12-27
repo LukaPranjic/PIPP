@@ -18,6 +18,13 @@ o_d = False #detections
 p_d = False
 e_d = False
 
+def error_handle(help_file):
+    with open(help_file,'r') as f:
+            for i,line in enumerate(f):
+                if i == 9:
+                    print(line,end='')
+                    print("Try 'python3 det3ction.py --help' for more information.")
+
 if len(sys.argv) == 1:
     print("Wrong number of arguments.")
     exit(0)
@@ -30,15 +37,31 @@ for i in itr:
     if current_arg == '--help':
         sh_f = True
         break
+    if current_arg == '--object':
+        o_d = True
+        continue
+    if current_arg == '--pose':
+        p_d = True
+        continue
+    if current_arg == '--emotion':
+        e_d = True
+        continue
+    if current_arg == '--all':
+        o_d = True
+        p_d = True
+        e_d = True
+        continue
     if current_arg[0] == '-':
         if 'h' in current_arg:
             sh_f = True
+            break
         if 'o' in current_arg:
             s_l = True
             if i < len(sys.argv):
                 save_location = sys.argv[i+1]
             else:
                 print("Wrong number of arguments.")
+                error_handle(help_file_location)
                 exit(0)
             next(itr)
         if 'a' in current_arg:
@@ -56,6 +79,8 @@ for i in itr:
         i_l = True
     else:
         print("Wrong number of arguments.")
+        error_handle(help_file_location)
+        
         exit(0)
 
 if sh_f:
@@ -69,6 +94,8 @@ save_location = os.path.abspath(save_location)
 
 if not i_l:
     print("No input image.")
+    error_handle(help_file_location)
+    
     exit(0)
 
 
