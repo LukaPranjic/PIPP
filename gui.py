@@ -68,6 +68,7 @@ class Ui_MainWindow(QDialog):
         self.pushButton_6.clicked.connect(self.reset_action)
         
         
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -85,7 +86,8 @@ class Ui_MainWindow(QDialog):
         self.pushButton_4.setText(_translate("MainWindow", "Save"))
         self.pushButton_5.setText(_translate("MainWindow", "Open"))
         self.pushButton_6.setText(_translate("MainWindow", "Reset"))
-        
+
+    
     def showImage(self,image_path):
         global working_image_path
         scene = QtWidgets.QGraphicsScene(self)
@@ -184,14 +186,17 @@ class Ui_MainWindow(QDialog):
         else:
             fd = File_Dialog()
             save_image_path = fd.saveFileDialog()
-            save = cv2.imread(temp_show_location)
-            cv2.imwrite(save_image_path,save)
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Information)
-            msg.setText("Success!")
-            msg.setInformativeText("Image saved at: " + save_image_path)
-            msg.setWindowTitle("Image saved!")
-            msg.exec_()
+            if save_image_path == None:
+                pass
+            else:
+                save = cv2.imread(temp_show_location)
+                cv2.imwrite(save_image_path,save)
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Information)
+                msg.setText("Success!")
+                msg.setInformativeText("Image saved at: " + save_image_path)
+                msg.setWindowTitle("Image saved!")
+                msg.exec_()
 
     def open_action(self):
         global working_image_path,temp
@@ -207,7 +212,8 @@ class Ui_MainWindow(QDialog):
             status = (input_path_tail+" :: "+str(w) + "x" + str(h))
             self.showImage(working_image_path)
             self.statusbar.showMessage(status)
-        
+    
+
     def reset_action(self):
         global working_image_path,temp
         print('reset_action')
@@ -247,10 +253,13 @@ def draw_object_detection(input_location):
     for i in rectangles:
             print((i[0],i[1]),(i[2],i[3]),(255,0,0),2)
             cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
-
+def closeEvent():
+    global temp_show_location
+    os.remove(temp_show_location)
 def main():
     global working_image_path,temp,temp_pose,temps,ui,status
     app = QtWidgets.QApplication(sys.argv)
+    app.aboutToQuit.connect(closeEvent)
     MainWindow = QtWidgets.QMainWindow()
     # fd = File_Dialog()
     # working_image_path = fd.openFileNameDialog() #image path used for detection/s
@@ -270,6 +279,6 @@ def main():
 
     MainWindow.show()
     sys.exit(app.exec_())
-        
+
 if __name__ == "__main__":
     main()
