@@ -11,9 +11,18 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QDialog
 from PyQt5.QtGui import QPixmap
-import sys
-import gui
-
+from objectdetection import objectdetection 
+from posedetection import *
+import emotion_detection
+import os.path
+import os,sys
+import cv2
+#globalne varijable
+working_image_path = ''
+temp = None
+temps = {'p':None,'d':None,'e':None,'pd':None,'pe':None,'de':None,'a':None}
+temp_pose = ''
+ui = None
 class Ui_MainWindow(QDialog):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -47,7 +56,13 @@ class Ui_MainWindow(QDialog):
         self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_5.setGeometry(QtCore.QRect(600, 550, 91, 27))
         self.pushButton_5.setObjectName("pushButton_5")
-        self.pushButton_4.clicked.connect(self.open_action)
+        self.pushButton_5.clicked.connect(self.open_action)
+        
+        self.pushButton_6 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_6.setGeometry(QtCore.QRect(500, 550, 91, 27))
+        self.pushButton_6.setObjectName("pushButton_6")
+        self.pushButton_6.clicked.connect(self.reset_action)
+        
         
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -65,6 +80,8 @@ class Ui_MainWindow(QDialog):
         self.pushButton_3.setText(_translate("MainWindow", "Emotion detection"))
         self.pushButton_4.setText(_translate("MainWindow", "Save"))
         self.pushButton_5.setText(_translate("MainWindow", "Open"))
+        self.pushButton_6.setText(_translate("MainWindow", "Reset"))
+        
     def showImage(self,image_path):
         scene = QtWidgets.QGraphicsScene(self)
         pixmap = QPixmap(image_path)
@@ -88,8 +105,23 @@ class Ui_MainWindow(QDialog):
         print('save_action')
     
     def open_action(self):
+        global working_image_path,temp
         print('open_action')
+        fd = File_Dialog()
+        working_image_path = fd.openFileNameDialog()
+        input_path_head,input_path_tail = os.path.split(working_image_path)
+        temp = cv2.imread(working_image_path)
+        w,h,c = temp.shape
+        status = (input_path_tail+" :: "+str(w) + "x" + str(h))
+        self.showImage(working_image_path)
+        self.statusbar.showMessage(status)
         
+    def reset_action(self):
+        global working_image_path,temp
+        print('reset_action')
+        temp = cv2.imread(working_image_path)
+        self.showImage(working_image_path)
+        self.statusbar.showMessage('No image selected.')
 class File_Dialog(QWidget):
 
     def __init__(self):
@@ -118,3 +150,33 @@ class File_Dialog(QWidget):
         fileName, _ = QFileDialog.getSaveFileName(self,"QFileDialog.getSaveFileName()","","All Files (*);;Text Files (*.txt)", options=options)
         if fileName:
             return(fileName)
+def main():
+    global working_image_path,temp,temp_pose,temps,ui
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    fd = File_Dialog()
+    working_image_path = fd.openFileNameDialog() #image path used for detection/s
+    temp_pose = pose_detection.poseDetection(working_image_path)
+    print(temp_pose)
+    # if '/' in working_image_path:
+    #     split_ch = '/'
+    # else:
+    #     split_ch = '\\'
+    input_path_head,input_path_tail = os.path.split(working_image_path)
+
+    temp = cv2.imread(working_image_path)
+    w,h,c = temp.shape
+    status = (input_path_tail+" :: "+str(w) + "x" + str(h))
+
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    ui.statusbar.showMessage(status)
+    ui.showImage(working_image_path)
+
+
+
+    MainWindow.show()
+    sys.exit(app.exec_())
+        
+if __name__ == "__main__":
+    main()
