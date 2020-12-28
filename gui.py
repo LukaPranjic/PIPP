@@ -36,10 +36,6 @@ class Ui_MainWindow(QDialog):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(800,604)
-        if os.path.isfile('icon.png'):
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap("icon.png"), QtGui.QIcon.Selected, QtGui.QIcon.On)
-            self.setWindowIcon(icon)
         
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -296,13 +292,13 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.aboutToQuit.connect(closeEvent)
     MainWindow = QtWidgets.QMainWindow()
+    MainWindow.setWindowIcon(QtGui.QIcon('icon.png'))
     
     status = ("No image selected.")
 
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     ui.statusbar.showMessage(status)
-
 
 
     MainWindow.show()
