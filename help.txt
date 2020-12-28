@@ -7,7 +7,7 @@
 ██████╔╝███████╗   ██║   ██████╔╝╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
 ╚═════╝ ╚══════╝   ╚═╝   ╚═════╝  ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
                                                                     
-Usage:     det3ction.py [option] ... [file path] -o [file path] 
+Usage:     det3ction.py [option] ... [input file path] -o [save file path] 
 -h, --help               show this help message
 -o                       specify the path to the file where generated output should be saved
 Options:
