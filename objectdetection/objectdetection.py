@@ -63,11 +63,13 @@ def get_people_coordinates(image_path):
                 boxes.append([x, y, w, h])
 
     #finds the best-fitting box
-    indices = cv2.dnn.NMSBoxes(boxes, confidences, 0, 0)
-
-
-    # im = Image.open(image_path) #opening input picture for drawing
-    # draw_im = ImageDraw.Draw(im)
+    
+    indices_1 = cv2.dnn.NMSBoxes(boxes, confidences, 0.3, 0.3)
+    indices_2 = cv2.dnn.NMSBoxes(boxes, confidences, 0, 0)
+    if len(indices_1) >= len(indices_2):
+        indices = indices_1
+    else:
+        indices = indices_2
 
     correct_boxes = []
     for i in indices:
@@ -76,8 +78,5 @@ def get_people_coordinates(image_path):
         if class_ids[i]==0:
             x,y,w,h = box
             correct_boxes.append([int(x),int(y),int(x+w),int(y+h)])
-            # draw_im.rectangle([x,y,x+w,y+h],outline=color_generator(),width=3)
-    
-    # im.show()
     
     return correct_boxes
