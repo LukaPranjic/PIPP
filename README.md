@@ -9,7 +9,7 @@ Collaborators: doradoljanin - Dora Doljanin, thelcrysis - Ljudevit Jelečević, 
 * [Documentation](#documentation)
 <!--te-->
 
-## Installation:
+## Installation
 First install dependencies with:
 `pip install -r requirements.txt`
 
