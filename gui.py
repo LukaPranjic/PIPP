@@ -186,14 +186,14 @@ class Ui_MainWindow(QDialog):
         else:
             fd = File_Dialog()
             save_image_path = fd.saveFileDialog()
-            if save_image_path == None or os.path.isfile(save_image_path):
-                if os.path.isdir(save_image_path):
-                    print(save_image_path,os.path.isfile(save_image_path))
+            if save_image_path == None or os.path.isdir(save_image_path):
+                if save_image_path == None:
+                    pass
+                elif os.path.isdir(save_image_path):
                     error_dialog = QtWidgets.QErrorMessage()
                     error_dialog.showMessage('Invalid name/file type')
                     error_dialog.exec_()
-                else:
-                    pass
+                
             else:
                 save = cv2.imread(temp_show_location)
                 cv2.imwrite(save_image_path,save)
@@ -271,8 +271,16 @@ class File_Dialog(QWidget):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(self,"Det3ction: Save image","","Images (*.png *.bmp *.jpg *.jpeg)", options=options)
-        if fileName:
+        head,tail = os.path.splitext(fileName)
+        if tail in ['.jpg','.png','.bmp','.jpeg']:
             return(fileName)
+        else:
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage('Invalid name/file type')
+            error_dialog.exec_()
+            return(None)
+            
+            
         
 def draw_object_detection(input_location):
     global temp
