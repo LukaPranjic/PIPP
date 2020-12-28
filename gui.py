@@ -35,9 +35,8 @@ ui = None
 class Ui_MainWindow(QDialog):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        # MainWindow.resize(800, 604)
         MainWindow.setFixedSize(800,604)
-        if os.path.exists('icon.png'):
+        if os.path.isfile('icon.png'):
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap("icon.png"), QtGui.QIcon.Selected, QtGui.QIcon.On)
             self.setWindowIcon(icon)
@@ -187,11 +186,14 @@ class Ui_MainWindow(QDialog):
         else:
             fd = File_Dialog()
             save_image_path = fd.saveFileDialog()
-            if save_image_path == None or not os.path.isfile(save_image_path):
-                if not os.path.isfile(save_image_path):
+            if save_image_path == None or os.path.isfile(save_image_path):
+                if os.path.isdir(save_image_path):
+                    print(save_image_path,os.path.isfile(save_image_path))
                     error_dialog = QtWidgets.QErrorMessage()
                     error_dialog.showMessage('Invalid name/file type')
                     error_dialog.exec_()
+                else:
+                    pass
             else:
                 save = cv2.imread(temp_show_location)
                 cv2.imwrite(save_image_path,save)
