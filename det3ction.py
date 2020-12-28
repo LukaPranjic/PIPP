@@ -32,7 +32,6 @@ def error_handle(help_file):
 if len(sys.argv) == 1:
     print("Wrong number of arguments.")
     exit(0)
-#TODO:zamijeniti ovaj shit kod s argpase libraryem
 itr = iter(range(1,len(sys.argv)))
 for i in itr:
     # print(i)
@@ -109,12 +108,9 @@ input_path_head,input_path_tail = os.path.split(input_location)
 if o_d or p_d or e_d:
     if p_d:
         temp = pose_detection.poseDetection(input_location)
-        # print(temp)
     if o_d:
         rectangles = objectdetection.get_people_coordinates(input_location)
-        print(rectangles)
         for i in rectangles:
-            print((i[0],i[1]),(i[2],i[3]),(255,0,0),2)
             cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
     if e_d:
         import emotion_detection
@@ -127,6 +123,4 @@ if o_d or p_d or e_d:
 if not s_l:
     save_location = input_path_head + '/a.jpg'
 cv2.imwrite(save_location,temp)
-# print(input_location,save_location,end=' ')
-# print()
-# print(o_d,p_d,e_d)
+

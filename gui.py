@@ -23,7 +23,7 @@ import emotion_detection
 import cv2
 
 
-#globalne varijable
+#global
 working_image_path = ''
 temp_show_location = 'temp.jpg'
 temp = None
@@ -31,13 +31,17 @@ status = ''
 flags = {'p_f':False,'d_f':False,'e_f':False}
 object_detection_result = None
 emotion_detection_result = None
-temp_pose = ''
 ui = None
 class Ui_MainWindow(QDialog):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         # MainWindow.resize(800, 604)
         MainWindow.setFixedSize(800,604)
+        if os.path.exists('icon.png'):
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap("icon.png"), QtGui.QIcon.Selected, QtGui.QIcon.On)
+            self.setWindowIcon(icon)
+        
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
@@ -102,7 +106,6 @@ class Ui_MainWindow(QDialog):
         item = QtWidgets.QGraphicsPixmapItem(pixmap_scaled_to_height)
         
         scene.addItem(item)
-        # self.graphicsView.fitInView()
         
         self.graphicsView.setScene(scene)
         input_path_head,input_path_tail = os.path.split(working_image_path)
@@ -115,7 +118,6 @@ class Ui_MainWindow(QDialog):
         global temp_show_location,working_image_path, status, flags, object_detection_result
         temp_location = None
         flags['d_f'] = True
-        print('object_detection_action')
         if working_image_path == '':
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage('No image selected.')
@@ -129,15 +131,12 @@ class Ui_MainWindow(QDialog):
             object_detection_result = objectdetection.get_people_coordinates(working_image_path)
         
             for i in object_detection_result:
-                print((i[0],i[1]),(i[2],i[3]),(255,0,0),2)
-                cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
+                cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(0,0,255),2)
             cv2.imwrite(temp_show_location,temp)
             self.showImage(temp_show_location)
     def pose_detection_action(self):
-        global temp_show_location,working_image_path, status, flags, object_detection_result, emotion_detection_result
-        print('pose_detection_action')
+        global temp_show_location,working_image_path,temp, status, flags, object_detection_result, emotion_detection_result
         flags['p_f'] = True
-        print(flags)
         if working_image_path == '':
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage('No image selected.')
@@ -147,11 +146,9 @@ class Ui_MainWindow(QDialog):
             temp = pose_cv2_obj
             if flags['d_f']:
                 for i in object_detection_result:
-                    # print((i[0],i[1]),(i[2],i[3]),(255,0,0),2)
-                    cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
+                    cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(0,0,255),2)
             if flags['e_f']:
                 for i in emotion_detection_result:
-                    # print(i)
                     cv2.rectangle(temp,i[0],i[1],(255,0,0),2)
                     text_position = (i[0][0],i[0][1]-10) #left upper corner
                     cv2.putText(temp,i[2],text_position, cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
@@ -162,7 +159,6 @@ class Ui_MainWindow(QDialog):
         global temp_show_location,working_image_path, status, flags, emotion_detection_result
         temp_location = None
         flags['e_f'] = True
-        print('emotion_detection_action')
         if working_image_path == '':
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage('No image selected.')
@@ -184,7 +180,6 @@ class Ui_MainWindow(QDialog):
             
     def save_action(self):
         global temp_show_location
-        print('save_action')
         if temp_show_location == '':
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage('No changes were made.')
@@ -192,8 +187,11 @@ class Ui_MainWindow(QDialog):
         else:
             fd = File_Dialog()
             save_image_path = fd.saveFileDialog()
-            if save_image_path == None:
-                pass
+            if save_image_path == None or not os.path.isfile(save_image_path):
+                if not os.path.isfile(save_image_path):
+                    error_dialog = QtWidgets.QErrorMessage()
+                    error_dialog.showMessage('Invalid name/file type')
+                    error_dialog.exec_()
             else:
                 save = cv2.imread(temp_show_location)
                 cv2.imwrite(save_image_path,save)
@@ -205,8 +203,7 @@ class Ui_MainWindow(QDialog):
                 msg.exec_()
 
     def open_action(self):
-        global working_image_path,temp
-        print('open_action')
+        global working_image_path,temp,temp_show_location, status,flags,object_detection_result,emotion_detection_result
         fd = File_Dialog()
         working_image_path = fd.openFileNameDialog()
         if working_image_path == None:
@@ -215,16 +212,38 @@ class Ui_MainWindow(QDialog):
             input_path_head,input_path_tail = os.path.split(working_image_path)
             temp = cv2.imread(working_image_path)
             h,w,c = temp.shape
+            
+            if os.path.exists(temp_show_location):
+                os.remove(temp_show_location)
+            flags['p_f'] = False
+            flags['d_f'] = False
+            flags['e_f'] = False
+            object_detection_result = None
+            emotion_detection_result = None
+            
             status = (input_path_tail+" :: "+str(w) + "x" + str(h))
             self.showImage(working_image_path)
             self.statusbar.showMessage(status)
     
 
     def reset_action(self):
-        global working_image_path,temp
-        print('reset_action')
+        global working_image_path,temp_show_location, status,flags,object_detection_result,emotion_detection_result
+
+        input_path_head,input_path_tail = os.path.split(working_image_path)
         temp = cv2.imread(working_image_path)
+        h,w,c = temp.shape
+        
+        if os.path.exists(temp_show_location):
+            os.remove(temp_show_location)
+        flags['p_f'] = False
+        flags['d_f'] = False
+        flags['e_f'] = False
+        object_detection_result = None
+        emotion_detection_result = None
+        
+        status = (input_path_tail+" :: "+str(w) + "x" + str(h))
         self.showImage(working_image_path)
+        self.statusbar.showMessage(status)
 
 class File_Dialog(QWidget):
 
@@ -235,8 +254,7 @@ class File_Dialog(QWidget):
     def openFileNameDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self,"Det3ction: Open image", "","All Files (*);;Python Files (*.py)", options=options)
-        # print(fileName)
+        fileName, _ = QFileDialog.getOpenFileName(self,"Det3ction: Open image", "","Images (*.png *.bmp *.jpg *.jpeg)", options=options)
         if fileName:
             return(fileName)
         
@@ -250,36 +268,30 @@ class File_Dialog(QWidget):
     def saveFileDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(self,"Det3ction: Save image","","All Files (*);;Text Files (*.txt)", options=options)
+        fileName, _ = QFileDialog.getSaveFileName(self,"Det3ction: Save image","","Images (*.png *.bmp *.jpg *.jpeg)", options=options)
         if fileName:
             return(fileName)
+        
 def draw_object_detection(input_location):
     global temp
     rectangles = objectdetection.get_people_coordinates(input_location)
     for i in rectangles:
-            print((i[0],i[1]),(i[2],i[3]),(255,0,0),2)
             cv2.rectangle(temp,(i[0],i[1]),(i[2],i[3]),(255,0,0),2)
 def closeEvent():
     global temp_show_location
-    os.remove(temp_show_location)
+    if os.path.exists(temp_show_location):
+        os.remove(temp_show_location)
 def main():
-    global working_image_path,temp,temp_pose,temps,ui,status
+    global working_image_path,temp,temps,ui,status
     app = QtWidgets.QApplication(sys.argv)
     app.aboutToQuit.connect(closeEvent)
     MainWindow = QtWidgets.QMainWindow()
-    # fd = File_Dialog()
-    # working_image_path = fd.openFileNameDialog() #image path used for detection/s
     
-    # input_path_head,input_path_tail = os.path.split(working_image_path)
-
-    # temp = cv2.imread(working_image_path)
-    # h,w,c = temp.shape
     status = ("No image selected.")
 
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     ui.statusbar.showMessage(status)
-    # ui.showImage(working_image_path)
 
 
 
