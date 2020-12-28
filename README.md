@@ -4,6 +4,7 @@ Collaborators: doradoljanin - Dora Doljanin, thelcrysis - Ljudevit Jelečević, 
 
 ## Table of content:
 <!--ts-->
+* [Installation](#installation)
 * [How to use](#how-to-use)
 * [Documentation](#documentation)
 <!--te-->
