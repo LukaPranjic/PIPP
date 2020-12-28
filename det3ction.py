@@ -23,10 +23,10 @@ p_d = False
 e_d = False
 
 def error_handle(help_file):
-    with open(help_file,'r') as f:
+    with open(help_file,'r', encoding="utf-8") as f:
             for i,line in enumerate(f):
                 if i == 9:
-                    print(line,end='')
+                    print(line, end='')
                     print("Try 'python3 det3ction.py --help' for more information.")
 
 if len(sys.argv) == 1:
@@ -70,7 +70,8 @@ for i in itr:
         if 'a' in current_arg:
             o_d = True
             p_d = True
-            e_d = True     
+            e_d = True
+            continue
         if 'd' in current_arg:
             o_d = True
         if 'p' in current_arg:
@@ -87,9 +88,9 @@ for i in itr:
         exit(0)
 
 if sh_f:
-    with open(help_file_location,'r') as f:
+    with open(help_file_location,'r', encoding="utf-8") as f:
         for line in f:
-            print(line,end='')
+            print(line, end='')
     print()
     exit(1)
 input_location = os.path.abspath(input_location)
