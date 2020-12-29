@@ -253,9 +253,14 @@ class File_Dialog(QWidget):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self,"Det3ction: Open image", "","Images (*.png *.bmp *.jpg *.jpeg)", options=options)
-        if fileName:
+        head,tail = os.path.splitext(fileName)
+        if tail in ['.jpg','.png','.bmp','.jpeg']:
             return(fileName)
-        
+        else:
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage('Invalid name/file type')
+            error_dialog.exec_()
+            return(None)
     def openFileNamesDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
