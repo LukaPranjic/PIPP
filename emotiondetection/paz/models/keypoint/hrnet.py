@@ -132,14 +132,14 @@ def HRNetDense(input_shape=(128, 128, 3), num_keypoints=20, growth_rate=4):
     x1 = BatchNormalization()(x1)
     x1 = Activation('relu')(x1)
     x2 = transition_block(x1, 2)
-    print('stage 1', x1.shape, x2.shape)
+    # print('stage 1', x1.shape, x2.shape)
 
     # stage II
     x1 = dense_block(x1, 4, growth_rate)
     x2 = dense_block(x2, 4, growth_rate)
     x1, x2 = fuse([x1, x2])
     x3 = transition_block(x2, 0.5)
-    print('stage 2', x1.shape, x2.shape, x3.shape)
+    # print('stage 2', x1.shape, x2.shape, x3.shape)
 
     # stage III
     x1 = dense_block(x1, 4, growth_rate)
@@ -147,7 +147,7 @@ def HRNetDense(input_shape=(128, 128, 3), num_keypoints=20, growth_rate=4):
     x3 = dense_block(x3, 4, growth_rate)
     x1, x2, x3 = fuse([x1, x2, x3])
     x4 = transition_block(x3, 0.5)
-    print('stage 3', x1.shape, x2.shape, x3.shape, x4.shape)
+    # print('stage 3', x1.shape, x2.shape, x3.shape, x4.shape)
 
     # stage IV
     x1 = dense_block(x1, 3, growth_rate)
@@ -155,7 +155,7 @@ def HRNetDense(input_shape=(128, 128, 3), num_keypoints=20, growth_rate=4):
     x3 = dense_block(x3, 3, growth_rate)
     x4 = dense_block(x4, 3, growth_rate)
     x1, x2, x3, x4 = fuse([x1, x2, x3, x4])
-    print('stage 4', x1.shape, x2.shape, x3.shape, x4.shape)
+    # print('stage 4', x1.shape, x2.shape, x3.shape, x4.shape)
 
     x2 = UpSampling2D(size=(2, 2))(x2)
     x3 = UpSampling2D(size=(4, 4))(x3)

@@ -1,5 +1,5 @@
-from paz.applications import HaarCascadeFrontalFace, MiniXceptionFER
-import paz.processors as pr
+from emotiondetection.paz.applications import HaarCascadeFrontalFace, MiniXceptionFER
+import emotiondetection.paz.processors as pr
 
 
 class EmotionDetector(pr.Processor):

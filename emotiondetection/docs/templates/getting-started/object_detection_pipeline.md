@@ -53,7 +53,7 @@ class PreprocessImage(SequentialProcessor):
 Let's see who it works:
 ``` python
 preprocess_image, augment_image = PreprocessImage((300, 300)), AugmentImage()
-print('Image pre-processing examples')
+# print('Image pre-processing examples')
 for _ in range(10):
     image = P.image.load_image(image_fullpath)
     image = preprocess_image(augment_image(image))
@@ -96,7 +96,7 @@ draw_boxes = SequentialProcessor([
 Let's test our box data augmentation pipeline!
 ``` python
 augment_boxes = AugmentBoxes()
-print('Box augmentation examples')
+# print('Box augmentation examples')
 for _ in range(10):
     image = P.image.load_image(image_fullpath)
     image, boxes = augment_boxes(image, box_data.copy())
@@ -166,7 +166,7 @@ def deprocess_image(image):
 Finally we can apply our **complete** pipeline that preprocess and augments the images as well the bounding boxes!
 ``` python
 augmentator = AugmentDetection(prior_boxes, num_classes=len(class_names))
-print('Image and boxes augmentations')
+# print('Image and boxes augmentations')
 for _ in range(10):
     sample = {'image': image_fullpath, 'boxes': box_data.copy()}
     data = augmentator(sample)
@@ -182,7 +182,7 @@ Here we show you the final step such that you can wrap it in our custom generato
 
 ``` python
 data = [{'image': image_fullpath, 'boxes': box_data}]
-print('Image and boxes augmentations with generator')
+# print('Image and boxes augmentations with generator')
 batch_size = 1
 sequence = ProcessingSequence(augmentator, batch_size, data)
 for _ in range(10):

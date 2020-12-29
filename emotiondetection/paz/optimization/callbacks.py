@@ -42,7 +42,7 @@ class DrawInferences(Callback):
             image_name = os.path.join(save_path, image_name)
             write_image(image_name, inferences[self.topic])
         if self.verbose:
-            print('Saving predicted images in:', self.save_path)
+            # print('Saving predicted images in:', self.save_path)
 
 
 class LearningRateScheduler(Callback):
@@ -74,7 +74,7 @@ class LearningRateScheduler(Callback):
             raise ValueError('Learning rate should be float.')
         K.set_value(self.model.optimizer.lr, learning_rate)
         if self.verbose > 0:
-            print('\nEpoch %05d: LearningRateScheduler reducing learning '
+            # print('\nEpoch %05d: LearningRateScheduler reducing learning '
                   'rate to %s.' % (epoch + 1, learning_rate))
 
     def schedule(self, epoch):
@@ -125,7 +125,7 @@ class EvaluateMAP(Callback):
                 metrics[self.class_names[arg]] = ap
                 result_str += '{:<16}: {:.4f}\n'.format(
                     self.class_names[arg], ap)
-            print(result_str)
+            # print(result_str)
 
             # Saving the evaluation results
             filename = os.path.join(self.save_path, 'MAP_Evaluation_Log.txt')
