@@ -2,7 +2,7 @@
 
 Collaborators: doradoljanin - Dora Doljanin, thelcrysis - Ljudevit Jelečević, PajserDivizija - Luka Pranjić
 
-## Table of content:
+## Table of content
 <!--ts-->
 * [Installation](#installation)
 * [How to use](#how-to-use)
