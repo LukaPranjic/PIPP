@@ -254,7 +254,7 @@ class File_Dialog(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(self,"Det3ction: Open image", "","Images (*.png *.bmp *.jpg *.jpeg)", options=options)
         head,tail = os.path.splitext(fileName)
-        if tail in ['.jpg','.png','.bmp','.jpeg']:
+        if tail in ['.jpg','.png','.bmp','.jpeg', '.JPG']:
             return(fileName)
         else:
             error_dialog = QtWidgets.QErrorMessage()
@@ -273,7 +273,7 @@ class File_Dialog(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(self,"Det3ction: Save image","","Images (*.png *.bmp *.jpg *.jpeg)", options=options)
         head,tail = os.path.splitext(fileName)
-        if tail in ['.jpg','.png','.bmp','.jpeg']:
+        if tail in ['.jpg','.png','.bmp','.jpeg', '.JPG']:
             return(fileName)
         else:
             error_dialog = QtWidgets.QErrorMessage()

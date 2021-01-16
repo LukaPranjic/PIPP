@@ -1,5 +1,6 @@
 from emotiondetection.paz.applications import HaarCascadeFrontalFace, MiniXceptionFER
 import emotiondetection.paz.processors as pr
+import numpy as np
 
 
 class EmotionDetector(pr.Processor):
@@ -14,8 +15,9 @@ class EmotionDetector(pr.Processor):
         boxes2D = self.detect(image)['boxes2D']
         cropped_images = self.crop(image, boxes2D)
         for cropped_image, box2D in zip(cropped_images, boxes2D):
-            box2D.class_name = self.classify(cropped_image)['class_name']
-        # return self.draw(image, boxes2D)
+            predictions = self.classify(cropped_image)
+            box2D.class_name = predictions['class_name']
+            box2D.score = round(np.amax(predictions['scores']),2)
         return boxes2D
 
     def install(self, image, boxes2D):

@@ -43,8 +43,8 @@ class DrawBoxes2D(Processor):
             color = self.class_to_color[class_name]
             if self.weighted:
                 color = [int(channel * box2D.score) for channel in color]
-            # text = '{:0.2f}, {}'.format(box2D.score, class_name)
-            text = '{}'.format(class_name)
+            text = '{:0.2f}, {}'.format(box2D.score, class_name)
+            # text = '{}'.format(class_name)
             put_text(image, text, (x_min, y_min - 10), self.scale, color, 1)
             draw_rectangle(image, (x_min, y_min), (x_max, y_max), color, 2)
         return image
