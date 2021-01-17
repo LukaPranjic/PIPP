@@ -39,7 +39,7 @@ def is_path_valid(path,exist):
 
 if len(sys.argv) == 1:
     print("Wrong number of arguments.")
-    error_handle(help_file)
+    error_handle(help_file_location)
     exit(0)
 itr = iter(range(1,len(sys.argv)))
 for i in itr:

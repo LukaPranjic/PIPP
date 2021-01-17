@@ -15,5 +15,3 @@ Options:
 -p, --pose               pose detection
 -e, --emotion            emotion detection
 -a, --all                object detection, pose detection, emotion detection
-
-  
